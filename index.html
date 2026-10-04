@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>RoboScripts — Roblox Scripts</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Inter,Arial,sans-serif;background:#080b14;color:#eef2ff}
+header{padding:24px 7%;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #20263a;position:sticky;top:0;background:#080b14ee;backdrop-filter:blur(12px);z-index:5}
+.logo{font-size:24px;font-weight:900}.logo span{color:#7c5cff}
+nav a{color:#aeb7d0;text-decoration:none;margin-left:22px}.hero{padding:80px 7% 55px;background:radial-gradient(circle at 75% 20%,#37207855,transparent 35%)}
+.badge{display:inline-block;padding:7px 12px;border:1px solid #332b60;border-radius:99px;color:#a995ff;background:#17132a}
+h1{font-size:clamp(40px,7vw,78px);line-height:.98;margin:18px 0}.hero p{max-width:650px;color:#aeb7d0;font-size:18px}
+.search{margin-top:28px;display:flex;gap:10px;max-width:760px}.search input{flex:1;padding:17px 20px;border-radius:14px;border:1px solid #303850;background:#101522;color:white;font-size:16px}.btn{border:0;border-radius:14px;padding:0 22px;background:#7c5cff;color:#fff;font-weight:800;cursor:pointer}
+main{padding:25px 7% 80px}.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin:10px 0 25px}.chip{border:1px solid #303850;background:#101522;color:#b9c1d5;padding:10px 14px;border-radius:999px;cursor:pointer}.chip.active{background:#21194b;color:#b9aaff;border-color:#5e48c7}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:18px}.card{background:#101522;border:1px solid #222b42;border-radius:20px;padding:22px;transition:.2s}.card:hover{transform:translateY(-3px);border-color:#5544a5}.icon{font-size:28px}.card h3{margin:12px 0 8px}.card p{color:#8f99b3;line-height:1.5}.tag{font-size:12px;color:#a995ff}.code{display:none;background:#070a11;border-radius:12px;padding:13px;margin-top:12px;white-space:pre-wrap;font-family:monospace;color:#d8dcff;font-size:12px;overflow:auto}.show{display:block}.copy{margin-top:10px;background:#202943;border:0;color:white;padding:9px 12px;border-radius:9px;cursor:pointer}
+.notice{margin:25px 0;padding:20px;border:1px solid #5b3b2b;background:#211611;border-radius:18px;color:#e9c4ae}.notice b{color:#ffad7e}
+footer{border-top:1px solid #20263a;padding:25px 7%;color:#707b96}
+@media(max-width:650px){nav{display:none}.search{flex-direction:column}.btn{height:52px}}
+</style>
+</head>
+<body>
+<header><div class="logo">Robo<span>Scripts</span></div><nav><a href="#scripts">Скрипты</a><a href="#delta">Delta</a><a href="#about">О сайте</a></nav></header>
+<section class="hero">
+<span class="badge">ROBLOX • LUA • STUDIO</span>
+<h1>Скрипты,<br>которые реально работают.</h1>
+<p>Каталог проверяемых примеров Lua для Roblox Studio. Ищи по игре или назначению, открывай код и копируй его в Studio.</p>
+<div class="search"><input id="search" placeholder="🔎  Например: obby, leaderboard, door..."><button class="btn" onclick="filterCards()">Найти</button></div>
+</section>
+<main id="scripts">
+<div class="toolbar">
+<button class="chip active" onclick="setCat('all',this)">Все</button>
+<button class="chip" onclick="setCat('obby',this)">Obby</button>
+<button class="chip" onclick="setCat('ui',this)">UI</button>
+<button class="chip" onclick="setCat('leaderboard',this)">Leaderboard</button>
+<button class="chip" onclick="setCat('door',this)">Двери</button>
+</div>
+<div class="grid" id="grid"></div>
+
+<section id="delta" class="notice">
+<b>⚠️ Delta Executor</b><br>
+Delta — сторонний инструмент для запуска скриптов в Roblox. Roblox запрещает exploits и модифицированные клиенты, а использование таких инструментов может привести к санкциям аккаунта. Поэтому этот сайт не раздаёт исполняемые файлы Delta и эксплойт-скрипты. Используй официальный, неизменённый клиент Roblox.
+</section>
+<section id="about" style="margin-top:40px"><h2>О сайте</h2><p style="color:#8f99b3">RoboScripts — демонстрационный каталог безопасных примеров для разработки в Roblox Studio. Скрипты ниже предназначены для твоих собственных проектов.</p></section>
+</main>
+<footer>RoboScripts © 2026 • Сделано для Roblox Studio</footer>
+<script>
+const data=[
+{name:"Checkpoint для Obby",cat:"obby",icon:"🏁",desc:"Сохраняет последний пройденный checkpoint в твоей игре.",code:`local checkpoint = script.Parent
+checkpoint.Touched:Connect(function(hit)
+  local player = game.Players:GetPlayerFromCharacter(hit.Parent)
+  if player then
+    player:SetAttribute("Checkpoint", checkpoint.Name)
+  end
+end)`},
+{name:"Простой Leaderboard",cat:"leaderboard",icon:"🏆",desc:"Создаёт таблицу Coins для игроков.",code:`game.Players.PlayerAdded:Connect(function(player)
+  local stats = Instance.new("Folder")
+  stats.Name = "leaderstats"
+  stats.Parent = player
+
+  local coins = Instance.new("IntValue")
+  coins.Name = "Coins"
+  coins.Value = 0
+  coins.Parent = stats
+end)`},
+{name:"Кнопка UI",cat:"ui",icon:"🖱️",desc:"Пример реакции TextButton на нажатие.",code:`local button = script.Parent
+
+button.Activated:Connect(function()
+  button.Text = "Нажато!"
+end)`},
+{name:"Открывающаяся дверь",cat:"door",icon:"🚪",desc:"Дверь открывается при нажатии на ProximityPrompt.",code:`local door = script.Parent
+local prompt = door.ProximityPrompt
+local open = false
+
+prompt.Triggered:Connect(function()
+  open = not open
+  door.CanCollide = not open
+  door.Transparency = open and 0.5 or 0
+end)`},
+{name:"Монетка",cat:"obby",icon:"🪙",desc:"При касании добавляет Coins и исчезает.",code:`local coin = script.Parent
+
+coin.Touched:Connect(function(hit)
+  local player = game.Players:GetPlayerFromCharacter(hit.Parent)
+  local stats = player and player:FindFirstChild("leaderstats")
+  local coins = stats and stats:FindFirstChild("Coins")
+  if coins then
+    coins.Value += 1
+    coin:Destroy()
+  end
+end)`}
+];
+let cat="all";
+function render(){
+ const q=document.getElementById("search").value.toLowerCase();
+ const grid=document.getElementById("grid");
+ grid.innerHTML="";
+ data.filter(x=>(cat==="all"||x.cat===cat)&&(`${x.name} ${x.desc} ${x.cat}`).toLowerCase().includes(q)).forEach((x,i)=>{
+  grid.innerHTML+=`<article class="card"><div class="icon">${x.icon}</div><span class="tag">${x.cat.toUpperCase()}</span><h3>${x.name}</h3><p>${x.desc}</p><button class="copy" onclick="toggle(${i})">Показать код</button><pre class="code" id="code${i}">${escapeHtml(x.code)}</pre></article>`;
+ });
+}
+function escapeHtml(s){return s.replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;")}
+function toggle(i){document.getElementById("code"+i).classList.toggle("show")}
+function filterCards(){render()}
+function setCat(c,el){cat=c;document.querySelectorAll(".chip").forEach(x=>x.classList.remove("active"));el.classList.add("active");render()}
+document.getElementById("search").addEventListener("input",render);render();
+</script>
+</body>
+</html>
